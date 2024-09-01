@@ -47,6 +47,7 @@ func (c *Client) ListTags(params ListTagsParams) (*ListTagsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	result := &ListTagsResponse{}
 	if err := json.NewDecoder(body).Decode(result); err != nil {
@@ -62,6 +63,7 @@ func (c *Client) GetTag(id int) (*Tag, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	tag := &Tag{}
 	if err := json.NewDecoder(body).Decode(tag); err != nil {
@@ -77,6 +79,7 @@ func (c *Client) CreateTag(name string) (*Tag, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	tag := &Tag{}
 	if err := json.NewDecoder(body).Decode(tag); err != nil {

@@ -30,6 +30,7 @@ func (c *Client) GetUserPreferences() (*UserPreferences, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	userPreferences := &UserPreferences{}
 	if err := json.NewDecoder(body).Decode(userPreferences); err != nil {

@@ -72,6 +72,7 @@ func (c *Client) ListBookmarks(params ListBookmarksParams) (*ListBookmarksRespon
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	result := &ListBookmarksResponse{}
 	if err := json.NewDecoder(body).Decode(result); err != nil {
@@ -87,6 +88,7 @@ func (c *Client) GetBookmark(id int) (*Bookmark, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	bookmark := &Bookmark{}
 	if err := json.NewDecoder(body).Decode(bookmark); err != nil {
@@ -105,6 +107,7 @@ func (c *Client) CreateBookmark(payload CreateBookmarkRequest) (*Bookmark, error
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	bookmark := &Bookmark{}
 	if err := json.NewDecoder(body).Decode(bookmark); err != nil {
@@ -124,6 +127,7 @@ func (c *Client) UpdateBookmark(id int, payload CreateBookmarkRequest) (*Bookmar
 	if err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	bookmark := &Bookmark{}
 	if err := json.NewDecoder(body).Decode(bookmark); err != nil {
