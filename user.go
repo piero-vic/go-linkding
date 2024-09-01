@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// UserPreferences represents the user-specific settings in the Linkding API.
 type UserPreferences struct {
 	Theme                 string `json:"theme"`
 	BookmarkDateDisplay   string `json:"bookmark_date_display"`
@@ -23,6 +24,7 @@ type UserPreferences struct {
 	} `json:"search_preferences"`
 }
 
+// GetUserPreferences retrieves the user's preferences from Linkding.
 func (c *Client) GetUserPreferences() (*UserPreferences, error) {
 	body, err := c.makeRequest(http.MethodGet, "/api/user/profile/", nil)
 	if err != nil {

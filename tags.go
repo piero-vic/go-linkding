@@ -9,11 +9,16 @@ import (
 	"time"
 )
 
+// ListTagsParams defines the parameters used when listing tags.
 type ListTagsParams struct {
-	Limit  int
+	// The maximum number of tags to return.
+	Limit int
+	// The offset for pagination.
 	Offset int
 }
 
+// ListTagsResponse represents the response from the Linkding API when listing
+// tags.
 type ListTagsResponse struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
@@ -21,16 +26,20 @@ type ListTagsResponse struct {
 	Results  []Tag  `json:"results"`
 }
 
+// Tag represents a tag object in the Linkding API.
 type Tag struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`
 	DateAdded time.Time `json:"date_added"`
 }
 
+// CreateTagRequest represents the request body when creating a new tag.
 type CreateTagRequest struct {
 	Name string `json:"name"`
 }
 
+// ListTags retrieves a list of tags from Linkding based on the provided
+// parameters.
 func (c *Client) ListTags(params ListTagsParams) (*ListTagsResponse, error) {
 	path := buildTagsQueryString("/api/tags", params)
 
@@ -47,6 +56,7 @@ func (c *Client) ListTags(params ListTagsParams) (*ListTagsResponse, error) {
 	return result, nil
 }
 
+// GetTag retrieves a single tag from Linkding.
 func (c *Client) GetTag(id int) (*Tag, error) {
 	body, err := c.makeRequest(http.MethodGet, fmt.Sprintf("/api/tags/%d/", id), nil)
 	if err != nil {
@@ -61,6 +71,7 @@ func (c *Client) GetTag(id int) (*Tag, error) {
 	return tag, nil
 }
 
+// CreateTag creates a new tag in Linkding with the provided name.
 func (c *Client) CreateTag(name string) (*Tag, error) {
 	body, err := c.makeRequest(http.MethodPost, "/api/tags/", CreateTagRequest{Name: name})
 	if err != nil {

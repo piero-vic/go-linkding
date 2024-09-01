@@ -9,12 +9,18 @@ import (
 	"net/url"
 )
 
+// Client handles all interactions with the Linkding API.
 type Client struct {
 	baseURL string
 	token   string
 	http    *http.Client
 }
 
+// NewClient creates a new Linkding API client using the given URL and token.
+//
+// The URL provided must be a complete URL. It must contain a schema and the
+// domain for the API. Do not include the prefix path of the API.
+// e.g. "https://linkding.example.org".
 func NewClient(baseURL, token string) *Client {
 	return &Client{
 		baseURL: baseURL,
