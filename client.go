@@ -3,6 +3,7 @@ package linkding
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -28,6 +29,13 @@ func NewClient(baseURL, token string) *Client {
 		http:    &http.Client{},
 	}
 }
+
+var (
+	ErrInternalServerError = errors.New("linkding: internal server error")
+	ErrUnauthorized        = errors.New("linkding: unauthorized")
+	ErrNotFound            = errors.New("linkding: not found")
+	ErrBadRequest          = errors.New("linkding: bad request")
+)
 
 func (c *Client) makeRequest(method, endpoint string, payload interface{}) (io.ReadCloser, error) {
 	uri, err := url.Parse(c.baseURL + endpoint)
@@ -59,9 +67,25 @@ func (c *Client) makeRequest(method, endpoint string, payload interface{}) (io.R
 		return nil, err
 	}
 
-	if res.StatusCode >= 400 {
+	switch res.StatusCode {
+	case http.StatusInternalServerError:
 		res.Body.Close()
-		return nil, fmt.Errorf("linkding: status code=%d", res.StatusCode)
+		return nil, ErrInternalServerError
+	case http.StatusUnauthorized:
+		res.Body.Close()
+		return nil, ErrUnauthorized
+	case http.StatusNotFound:
+		res.Body.Close()
+		return nil, ErrNotFound
+	case http.StatusBadRequest:
+		defer res.Body.Close()
+
+		bodyBytes, err := io.ReadAll(res.Body)
+		if err != nil {
+			return nil, fmt.Errorf("%w (%v)", ErrBadRequest, err)
+		}
+
+		return nil, fmt.Errorf("%w (%s)", ErrBadRequest, string(bodyBytes))
 	}
 
 	return res.Body, nil
