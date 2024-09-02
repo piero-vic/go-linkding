@@ -66,7 +66,26 @@ type CreateBookmarkRequest struct {
 // ListBookmarks retrieves a list of bookmarks from Linkding based on the
 // provided parameters.
 func (c *Client) ListBookmarks(params ListBookmarksParams) (*ListBookmarksResponse, error) {
-	path := buildBookmarksQueryString("/api/bookmarks", params)
+	path := buildBookmarksQueryString("/api/bookmarks/", params)
+
+	body, err := c.makeRequest(http.MethodGet, path, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
+
+	result := &ListBookmarksResponse{}
+	if err := json.NewDecoder(body).Decode(result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// ListArchivedBookmarks retrieves a list of archived bookmarks from Linkding.
+// It also filters the list based on the provided parameters.
+func (c *Client) ListArchivedBookmarks(params ListBookmarksParams) (*ListBookmarksResponse, error) {
+	path := buildBookmarksQueryString("/api/bookmarks/archived/", params)
 
 	body, err := c.makeRequest(http.MethodGet, path, nil)
 	if err != nil {
