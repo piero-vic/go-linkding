@@ -156,6 +156,20 @@ func (c *Client) UpdateBookmark(id int, payload CreateBookmarkRequest) (*Bookmar
 	return bookmark, nil
 }
 
+// ArchiveBookmark archives a bookmark from Linkding.
+func (c *Client) ArchiveBookmark(id int) error {
+	_, err := c.makeRequest(http.MethodPost, fmt.Sprintf("/api/bookmarks/%d/archive/", id), nil)
+
+	return err
+}
+
+// UnarchiveBookmark unarchives a bookmark from Linkding.
+func (c *Client) UnarchiveBookmark(id int) error {
+	_, err := c.makeRequest(http.MethodPost, fmt.Sprintf("/api/bookmarks/%d/unarchive/", id), nil)
+
+	return err
+}
+
 // DeleteBookmark deletes a bookmark from Linkding.
 func (c *Client) DeleteBookmark(id int) error {
 	_, err := c.makeRequest(http.MethodDelete, fmt.Sprintf("/api/bookmarks/%d/", id), nil)
