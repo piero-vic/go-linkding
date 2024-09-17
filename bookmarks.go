@@ -34,8 +34,8 @@ type ListBookmarksResponse struct {
 type Bookmark struct {
 	ID                    int       `json:"id"`
 	URL                   string    `json:"url"`
-	UserTitle             string    `json:"title"`
-	UserDescription       string    `json:"description"`
+	Title                 string    `json:"title"`
+	Description           string    `json:"description"`
 	Notes                 string    `json:"notes"`
 	WebsiteTitle          string    `json:"website_title"`
 	WebsiteDescription    string    `json:"website_description"`
