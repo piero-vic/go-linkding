@@ -19,6 +19,12 @@ type ListBookmarksParams struct {
 	Offset int
 	// Filter to include only unread bookmarks.
 	Unread bool
+	// Search for bookmarks added after this date
+	AddedSince time.Time
+	// Search for bookmarks modified after this date
+	ModifiedSince time.Time
+	// Sort order of results: added_asc, added_desc, title_asc, title_desc
+	Sort string
 }
 
 // ListBookmarksResponse represents the response from the Linkding API when
@@ -240,6 +246,18 @@ func buildBookmarksQueryString(path string, params ListBookmarksParams) string {
 
 	if params.Unread {
 		values.Set("unread", "yes")
+	}
+
+	if !params.AddedSince.IsZero() {
+		values.Set("added_since", params.AddedSince.Format(time.RFC3339))
+	}
+
+	if !params.ModifiedSince.IsZero() {
+		values.Set("modified_since", params.AddedSince.Format(time.RFC3339))
+	}
+
+	if params.Sort != "" {
+		values.Set("sort", params.Sort)
 	}
 
 	if len(values) > 0 {
